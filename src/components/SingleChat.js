@@ -15,7 +15,7 @@ import animationData from "../animations/typing.json";
 import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { ChatState } from "../Context/ChatProvider";
-const ENDPOINT = "http://localhost:5000"; 
+const ENDPOINT = "http://localhost:5000";
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -90,7 +90,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           config
         );
         socket.emit("new message", data);
-        setMessages([...messages, data]);
+        setMessages([...messages.message, data.message]);
       } catch (error) {
         toast({
           title: "Error Occured!",
@@ -100,6 +100,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           isClosable: true,
           position: "bottom",
         });
+        console.log(error);
       }
     }
   };
@@ -116,23 +117,25 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   useEffect(() => {
     fetchMessages();
-
+    console.log("I am slecetf", selectedChat);
     selectedChatCompare = selectedChat;
     // eslint-disable-next-line
   }, [selectedChat]);
 
   useEffect(() => {
     socket.on("Message Recieved", (newMessageRecieved) => {
+      console.log("--------", newMessageRecieved);
       if (
         !selectedChatCompare || // if chat is not selected or doesn't match current chat
-        selectedChatCompare._id !== newMessageRecieved.chat._id
+        selectedChatCompare._id !== newMessageRecieved.message._id
       ) {
-        if (!notification.includes(newMessageRecieved)) {
-          setNotification([newMessageRecieved, ...notification]);
+        console.log("helloooooo");
+        if (!notification.includes(newMessageRecieved.message)) {
+          setNotification([newMessageRecieved.message, ...notification]);
           setFetchAgain(!fetchAgain);
         }
       } else {
-        setMessages([...messages, newMessageRecieved]);
+        setMessages([...messages.message, newMessageRecieved.message]);
       }
     });
   });
@@ -205,7 +208,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             w="100%"
             h="100%"
             borderRadius="lg"
-            overflowY="hidden"
+            // overflowY="hidden"
           >
             {loading ? (
               <Spinner
@@ -217,7 +220,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               />
             ) : (
               <div className="messages">
-                <ScrollableChat messages={messages.messages} />
+                <ScrollableChat messages={messages.message} />
               </div>
             )}
 
@@ -227,8 +230,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               isRequired
               mt={3}
             >
-              {istyping ? <div>Typing......</div>: (<></>)}
+              {istyping ? <div>Typing......</div> : <></>}
               <Input
+                style={{ position: "relative", bottom: "0px" }}
                 variant="filled"
                 bg="#E0E0E0"
                 placeholder="Enter a message.."

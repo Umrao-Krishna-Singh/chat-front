@@ -28,7 +28,7 @@ import { Spinner } from "@chakra-ui/spinner";
 import ProfileModal from "./ProfileModal";
 // import NotificationBadge from "react-notification-badge";
 // import { Effect } from "react-notification-badge";
-import { MDBBadge, MDBBtn } from 'mdb-react-ui-kit';
+import { MDBBadge, MDBBtn } from "mdb-react-ui-kit";
 import { getSender } from "../../config/ChatLogics";
 import UserListItem from "../userAvatar/UserListItem";
 import { ChatState } from "../../Context/ChatProvider";
@@ -47,7 +47,7 @@ function SideDrawer() {
     chats,
     setChats,
   } = ChatState();
-
+  console.log("aaaaaaaaaaaaaaaaa", notification);
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const history = useHistory();
@@ -154,8 +154,9 @@ function SideDrawer() {
               /> */}
               <MDBBtn>
                 Notifications
-                <MDBBadge className='ms-2' color='danger'>
-                {" "}{notification.length}
+                <MDBBadge className="ms-2" color="danger">
+                  {" "}
+                  {notification.length}
                 </MDBBadge>
               </MDBBtn>
               {/* <BellIcon fontSize="2xl" m={1} /> */}
